@@ -9,6 +9,9 @@ langchain-community = "*"
 langgraph = "*"
 langchain-openai = "*"
 unstructured = "*"
+langchain-huggingface = "*"
+sentence-transformers = "*"
+langchain-postgres = "*"
 
 [dev-packages]
 

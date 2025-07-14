@@ -1,30 +1,34 @@
 from langchain import hub
 from langchain_openai import OpenAIEmbeddings
 from langchain.chat_models import init_chat_model
-from langchain_core.vectorstores import InMemoryVectorStore
 from langchain_community.document_loaders import DirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langgraph.graph import START, StateGraph
 from typing_extensions import List, TypedDict
 from langchain_core.documents import Document
 from langchain_core.prompts import PromptTemplate
+from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 
 import prompt
+import vector_store
+
+PGVECTOR_COLLECTION = "my_docs"
 
 if __name__ == "__main__":
     llm = init_chat_model("gpt-4o-mini", model_provider="openai")
 
-    embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
-    vector_store = InMemoryVectorStore(embeddings)
+    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
+    vector_db, embeddings_present = vector_store.setup_vector_store_conn(PGVECTOR_COLLECTION, embeddings)
 
-    loader = DirectoryLoader("./data", glob="**/*.txt")
-    docs = loader.load()
+    if not embeddings_present:
+        loader = DirectoryLoader("./data", glob="**/*.txt")
+        docs = loader.load()
 
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-    all_splits = text_splitter.split_documents(docs)
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+        all_splits = text_splitter.split_documents(docs)
 
-    # Index chunks
-    _ = vector_store.add_documents(documents=all_splits)
+        # Index chunks
+        _ = vector_db.add_documents(documents=all_splits)
 
     rag_prompt = prompt.build_prompt()
 
@@ -36,7 +40,7 @@ if __name__ == "__main__":
     
     # Define application steps
     def retrieve(state: State):
-        retrieved_docs = vector_store.similarity_search(state["question"])
+        retrieved_docs = vector_db.similarity_search(state["question"])
         return {"context": retrieved_docs}
     
     def generate(state: State):
