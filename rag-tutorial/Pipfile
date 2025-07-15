@@ -12,6 +12,8 @@ unstructured = "*"
 langchain-huggingface = "*"
 sentence-transformers = "*"
 langchain-postgres = "*"
+fastapi = {extras = ["standard"], version = "*"}
+pydantic = "*"
 
 [dev-packages]
 

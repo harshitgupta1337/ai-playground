@@ -34,8 +34,6 @@ if __name__ == "__main__":
         # Index chunks
         _ = vector_db.add_documents(documents=all_splits)
 
-    rag_prompt = prompt.build_prompt()
-
     @tool(response_format="content_and_artifact")
     def retrieve(query: str):
         """Retrieve information related to a query."""
