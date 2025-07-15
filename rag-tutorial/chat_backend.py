@@ -85,12 +85,11 @@ def get_agent_for_thread(thread_id: str):
 
 @app.post("/chat")
 async def chat(query: ChatQuery):
-    return {"answer": "Sample response"}
-    #config = {"configurable": {"thread_id": query.thread_id}}
-    #input_message = {"role": "user", "content": query.question}
-    #response = agent_executor.invoke({"messages": [input_message]},
-    #    config=config,
-    #)
+    config = {"configurable": {"thread_id": query.thread_id}}
+    input_message = {"role": "user", "content": query.question}
+    response = agent_executor.invoke({"messages": [input_message]},
+        config=config,
+    )
 
-    #return {"answer": response["messages"][-1].content}
+    return {"answer": response["messages"][-1].content}
 
