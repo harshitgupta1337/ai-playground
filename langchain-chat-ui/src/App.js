@@ -31,7 +31,7 @@ function App() {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://10.0.0.35:8000/chat", {
+      const res = await axios.post("http://174.168.62.145:8000/chat", {
         thread_id: threadId,
         question: input,
       });
