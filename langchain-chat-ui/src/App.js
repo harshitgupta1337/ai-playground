@@ -108,7 +108,10 @@ const styles = {
     flex: 1,
     padding: "1rem",
     overflowY: "auto",
+    overflowX: "hidden",      // 🔑 Prevent horizontal scroll
     background: "#f4f4f4",
+    display: "flex",
+    flexDirection: "column",
   },
   message: {
     maxWidth: "70%",
@@ -116,7 +119,9 @@ const styles = {
     borderRadius: "1rem",
     marginBottom: "0.5rem",
     lineHeight: 1.4,
-    whiteSpace: "pre-wrap",
+    whiteSpace: "pre-wrap",      // Allows line breaks and wrapping
+    wordBreak: "break-word",     // Wraps long words
+    overflowWrap: "break-word",  // Fallback for older browsers
   },
   userMessage: {
     backgroundColor: "#007bff",
